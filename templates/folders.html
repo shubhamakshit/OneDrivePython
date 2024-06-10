@@ -1,0 +1,39 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Folder</title>
+</head>
+<style>
+    table
+{
+    width: 100%;
+    border: black 1px solid;
+}
+    td{
+        border-right: black 1px solid;
+    }
+
+</style>
+<script>
+
+</script>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>Name Of Folder</th>
+        <th>ID</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for folder in folder_json['folders']%}
+    <tr>
+        <td>{{ folder }}</td>
+        <td>{{ folder_json['id'][loop.index] }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>

@@ -1,14 +1,12 @@
 import os
-import msal
 import requests
 from urllib.parse import urlencode
-from msal import PublicClientApplication
 from logger import Logger
 
 log = Logger('log.txt')
 os.environ['CLIENT_ID'] = '957cc50e-1bdc-45f2-82e1-8fb66bd99166'
 os.environ['TENANT_ID'] = '7ad9d758-a664-44ae-b6d7-82eab1ba960d'
-
+os.environ['CLIENT_SECRET'] = 'V538Q~vmaz8Nwa3btNqPkuWkSPkxMyxGA5pBQbmy'
 
 
 # Retrieve the environment variables
@@ -112,3 +110,20 @@ def uploadBytesToUploadSession(access_token,upload_url,start,byte_data,total_byt
         return response.json()
     else:
         return {'error': 'Upload failed'}
+
+def getChildrenInFolder(access_token,folder_id):
+    import url_handler as uh
+    headers ={
+        "Authorization": f"Bearer {access_token}"
+    }
+
+    response = requests.get(uh.CONSTRUCT_DRIVE_URL(folder_id), headers=headers)
+
+    log.log(f'Folder ID: {folder_id}')
+    log.log(f'Access token in getChildrenInFolder: {access_token}')
+    log.log(f'Response: {response.json()}')
+
+    if response.json():
+        return response.json()
+    else:
+        return {'error': 'Children not found'}

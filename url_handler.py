@@ -9,6 +9,9 @@ DEFAULT_SCOPES = [
     'Sites.FullControl.All'
 ]
 
+def CONSTRUCT_DRIVE_URL(iten_id):
+    return f'{base_url}/me/drive/items/{iten_id}/children'
+
 AUTHORIZE_URL = get_auth_url(DEFAULT_SCOPES)
 TOKEN_URL =  get_token_url()
 CALLBACK_URL = 'http://localhost:8000/callback'

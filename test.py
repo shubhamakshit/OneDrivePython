@@ -58,25 +58,15 @@ def index():
     if cookie:
         data = getUserProfile()
         if 'error' in data:
-            return data['error']
+            resp =  make_response(redirect('/login'))
+            resp.delete_cookie('access_token')
+            return resp
         name = data['displayName']
-        return f'Hello {name}'
+        return f'Hello {name}<br>{request.cookies.get("access_token")}'
     else:
         return render_template("login.html")
 
-@app.route('/folders')
-def folders():
-    access_token = request.cookies.get('access_token')
-    response_json = main.getChildrenInRoot(access_token)
 
-    if 'error' in response_json: return response_json
-
-    return render_template('folders.html',folder_json={
-
-        'folders': [folder['name'] for folder in OneDrive.getFolders_Only(response_json) ],
-        'id': [folder['id'] for folder in OneDrive.getFolders_Only(response_json) ]
-
-    })
 
 @app.route('/test-upload')
 def test_upload():
@@ -95,6 +85,46 @@ def begin_upload():
     #     'folders': [folder['name'] for folder in OneDrive.getFolders_Only(response_json) ]
     #
     # }
+
+
+@app.route('/folders')
+@app.route('/folder')
+@app.route('/folder/')
+@app.route('/folders/')
+def folders():
+    access_token = request.cookies.get('access_token')
+    response_json = main.getChildrenInRoot(access_token)
+
+    if 'error' in response_json: return response_json
+
+    return render_template('directory.html',
+                           folders={folder['name']:folder['id'] for folder in OneDrive.getFolders_Only(response_json)},
+                           files={file['name']:file['id'] for file in OneDrive.getFiles_Only(response_json)}
+                           )
+
+@app.route('/folders/<folder_id>')
+@app.route('/folder/<folder_id>')
+def folder(folder_id):
+    access_token = request.cookies.get('access_token')
+    response_json = main.getChildrenInFolder(access_token,folder_id)
+
+    if 'error' in response_json: return response_json
+
+    # data = OneDrive.getFiles_Only(response_json)
+    #
+    # print(
+    #
+    # )
+    # return render_template('folders.html',folder_json={
+    #
+    #     'folders': [folder['name'] for folder in OneDrive.getFolders_Only(response_json) ],
+    #     'id': [folder['id'] for folder in OneDrive.getFolders_Only(response_json) ]
+    #
+    # })
+    return render_template('directory.html',
+                           folders={folder['name']:folder['id'] for folder in OneDrive.getFolders_Only(response_json)},
+                           files={file['name']:file['id'] for file in OneDrive.getFiles_Only(response_json)}
+                           )
 
 if __name__ == '__main__':
     app.run(port=8000, debug=True)
