@@ -8,7 +8,7 @@ from logger import Logger
 log = Logger('log.txt')
 os.environ['CLIENT_ID'] = '957cc50e-1bdc-45f2-82e1-8fb66bd99166'
 os.environ['TENANT_ID'] = '7ad9d758-a664-44ae-b6d7-82eab1ba960d'
-os.environ['CLIENT_SECRET'] = 'V538Q~vmaz8Nwa3btNqPkuWkSPkxMyxGA5pBQbmy'
+
 
 
 # Retrieve the environment variables
